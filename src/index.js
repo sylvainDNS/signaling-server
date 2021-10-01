@@ -24,21 +24,21 @@ io.on('connection', socket => {
     }
   })
 
+  socket.on('ice-candidate', payload => {
+    console.log(`ice-candidate`)
+
+    io.to(payload.target).emit('ice-candidate', payload.candidate)
+  })
+
   socket.on('offer', payload => {
-    console.log(`Offer ${payload}`)
+    console.log(`Offer {target: ${payload.target}, caller: ${payload.caller}}`)
 
     io.to(payload.target).emit('offer', payload)
   })
 
   socket.on('answer', payload => {
-    console.log(`Answer ${payload}`)
+    console.log(`Answer {target: ${payload.target}, caller: ${payload.caller}}`)
 
     io.to(payload.target).emit('answer', payload)
-  })
-
-  socket.on('ice-candidate', incoming => {
-    console.log(`ice-candidate ${incoming}`)
-
-    io.to(incoming.target).emit('ice-candidate', incoming.candidate)
   })
 })
